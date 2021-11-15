@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Cliente</title>
+
+     <!--favicon básico-->
+    <link rel="icon" href="../build/icon.png"/>
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+</head>
+
+<body class="text-center">
+    <div class="container">
+        <h1>Cadastro</h1>
+    </div>
+    </div>
+    <br>
+    <br>
+    <div class="container">
+        <form action="" id="formEditar" method="" role="form">
+            <h1 class="h3 mb-3 fw-normal">Editar Cliente</h1>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" name="clienteId" id="clienteId" readonly="readonly">
+                <label class="form-label" for="clienteId">id</label>
+            </div>
+            <br>
+
+            <div class="form-floating">
+                <input type="text" class="form-control" name="clienteNome" id="clienteNome"
+                    placeholder="Fulando da Silva">
+                <label class="form-label" for="clienteNome">Nome</label>
+            </div>
+            <br>
+            <div class="form-floating">
+                <input type="text" class="form-control" name="clienteEmail" id="clienteEmail" value=""
+                    placeholder="nome@exemplo.com">
+                <label class="form-label" for="clienteEmail">Endereço de e-mail</label>
+            </div>
+            <br>
+            <button class="btn btn-outline-success me-2" type="button" onclick="atualizaCliente()">editar</button>
+            <a href="/index.html">voltar</a>
+        </form>
+    </div>
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+
+    const urlParmetros = new URLSearchParams(window.location.search);
+    const id = urlParmetros.get('id');
+
+    const url = 'http://localhost:3000/clientes/' + id;
+
+    fetch(url)
+        .then((resp) => resp.json())
+        .then(function (data) {
+            let cliente = data.results;
+            document.getElementById('clienteId').value = cliente.id;
+            document.getElementById('clienteNome').value = cliente.nome;
+            document.getElementById('clienteEmail').value = cliente.email;
+            //console.log(clientes);
+            /*return clientes.map(function (cliente) {
+                           
+            })*/
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    function atualizaCliente() {
+
+        let clienteId = document.getElementById('clienteId').value;
+        let clienteNome = document.getElementById('clienteNome').value;
+        let clienteEmail = document.getElementById('clienteEmail').value;
+        console.log("nome do cliente: "+ clienteNome);
+        console.log("email do cliente: " + clienteEmail);
+
+        const url = 'http://localhost:3000/clientes/'+clienteId;
+
+        let cliente = {            
+            'nome': clienteNome,
+            'email': clienteEmail
+        }
+
+        var request = new Request(url, {
+            method: 'PUT',
+            body: JSON.stringify(cliente),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8' // Indicates the content 
+            }
+        });
+
+        fetch(request)
+            .then(function () {
+                alert("cliente atualizado com sucesso");
+                window.location.replace('/index.html');
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
+
+</script>
